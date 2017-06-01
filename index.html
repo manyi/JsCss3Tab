@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+	<div class="silder">
+		<div class="main" id="temp_main">
+			<div class="main-i " id="main-i_{{index}}">
+				<div class="caption">
+					<h2>{{h2}}</h2>
+					<h3>{{h3}}</h3>
+				</div>
+				<img src="images/{{index}}.jpg" class="piceure">
+			</div> 
+		</div>
+		<div class="ctrl" id="temp_ctrl">
+			<div class="ctrl-i" id="ctrl-i_{{index}}"  onclick="moveSilder({{index}})">
+				<a href="javascript:void(0)"><img src="images/{{index}}.jpg"></a>
+			</div>  
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	
+	//1.定义数据
+	var data =[
+		{img:1,h2:'Createqe',h3:'GDdsfwew'}, 
+		{img:2,h2:'Createqe',h3:'GDdsfwew'}, 
+		{img:3,h2:'Createqe',h3:'GDdsfwew'}, 
+		{img:4,h2:'Createqe',h3:'GDdsfwew'}, 
+		{img:5,h2:'Createqe',h3:'GDdsfwew'}, 
+		{img:6,h2:'Createqe',h3:'GDdsfwew'}, 
+		{img:7,h2:'Createqe',h3:'GDdsfwew'} 
+		]
+	//2.配置通用函数
+	var g = function(id){ 
+		if(id.substr(0,1) ==='.'){
+			return document.getElementsByClassName(id.substr(1))
+		}
+		return document.getElementById(id)
+	}
+	//3.添加内容
+	function addSliders(){
+		var tpl_main = g('temp_main').innerHTML  
+								.replace(/^\s*/,'')
+								.replace(/\s*$/,'')//替换前后空格符
+		var tpl_ctrl = g('temp_ctrl').innerHTML
+								.replace(/^\s*/,'')
+								.replace(/\s*$/,'')
+		var out_main = []
+		var out_ctrl = []
+		for(i in data){ 
+			var _html_main = tpl_main
+							.replace(/{{index}}/g,data[i].img)
+							.replace(/{{h2}}/g,data[i].h2)
+							.replace(/{{h3}}/g,data[i].h3)//替换main模板内容的内容
+			var _html_ctrl = tpl_ctrl
+							.replace(/{{index}}/g,data[i].img)//替换ctrl的内容
+			out_main.push(_html_main)
+			out_ctrl.push(_html_ctrl)
+		}
+		g('temp_main').innerHTML = out_main.join('')//将已经替换的内容写入到DIV内
+		g('temp_ctrl').innerHTML = out_ctrl.join('')
+	}
+	function moveSilder(id){ 
+		var list_main = g('.main-i')//获取所有main||ctrl元素
+		var list_ctrl = g('.ctrl-i') 
+
+		for(i=0;i<list_main.length;i++){//删除所有样式
+			list_main[i].className = list_main[i].className.replace('main-i_active','')
+			list_ctrl[i].className = list_ctrl[i].className.replace('ctrl-i_active','') 
+		}
+		list_main[id-1].className += ' main-i_active'
+		list_ctrl[id-1].className += ' ctrl-i_active' 
+	}
+	function movePictures(){
+		var pictures = g('.piceure')
+		for(i=0;i<pictures.length;i++){
+			pictures[i].style.marginTop = (-1 * pictures[i].clientHeight / 2) + 'px'
+		}
+	}
+	window.onload=function(){
+		addSliders();
+		moveSilder(1)
+		movePictures()
+	}
+</script>
+</html>
